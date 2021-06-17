@@ -4,7 +4,7 @@ import * as lcdao from '@live-change/dao'
 import { reactiveMixin, reactivePrefetchMixin, ReactiveObservableList } from '@live-change/dao-vue3'
 import { SockJsConnection } from '@live-change/dao-sockjs'
 
-function clientApi(settings) {
+function clientApi(settings = {}) {
   const dao = new lcdao.Dao(window.__CREDENTIALS__, {
     remoteUrl: document.location.protocol + '//' + document.location.host + "/api/sockjs",
     protocols: {
@@ -45,6 +45,9 @@ function clientApi(settings) {
       return createReactiveObject(definition, reactiveMixin(api), reactivePrefetchMixin(api) )
     }
   })
+  for(const plugin of (settings.use || [])) {
+    plugin(api)
+  }
   api.generateServicesApi()
 
   return api
