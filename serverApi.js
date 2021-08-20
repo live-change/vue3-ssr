@@ -20,3 +20,4 @@ async function serverApi(dao, settings = {}) {
 }
 
 export { serverApi }
+export default serverApi
