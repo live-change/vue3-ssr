@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/live-change/vue3-ssr",
   "dependencies": {
-    "@vue/server-renderer": "^3.2.4",
+    "@vue/server-renderer": "^3.2.6",
     "debug": "^4.3.2",
-    "vue": "^3.2.4"
+    "vue": "^3.2.6"
   }
 }
