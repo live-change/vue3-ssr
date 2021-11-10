@@ -23,6 +23,7 @@
   "dependencies": {
     "debug": "^4.3.2",
     "vue": "^3.2.21",
+    "@live-change/vue-api": "^0.1.10",
     "@live-change/uid": "^0.1.3"
   }
 }
