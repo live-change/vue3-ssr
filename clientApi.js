@@ -13,9 +13,9 @@ function clientApi(settings = {}) {
 
     ...settings,
 
-    fastAuth: !window.hasOwnProperty('__CREDENTIALS__'),
-
     connectionSettings: {
+      fastAuth: !window.hasOwnProperty('__CREDENTIALS__'),
+
       queueRequestsWhenDisconnected: true,
       requestSendTimeout: Infinity,
       requestTimeout: Infinity,
