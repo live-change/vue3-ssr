@@ -1,5 +1,5 @@
 import { createReactiveObject } from '@live-change/vue3-components'
-import { Api } from '@live-change/vue-api'
+import Api from './Api.js'
 import { reactiveMixin, reactivePrefetchMixin } from '@live-change/dao-vue3'
 
 

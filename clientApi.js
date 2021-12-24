@@ -1,8 +1,8 @@
 import { createReactiveObject } from '@live-change/vue3-components'
-import * as lcapi from '@live-change/vue-api'
 import * as lcdao from '@live-change/dao'
 import { reactiveMixin, reactivePrefetchMixin, ReactiveObservableList } from '@live-change/dao-vue3'
 import SockJsConnection from '@live-change/dao-sockjs'
+import Api from "./Api.js"
 
 function clientApi(settings = {}) {
   const dao = new lcdao.Dao(window.__CREDENTIALS__, {
@@ -37,9 +37,10 @@ function clientApi(settings = {}) {
     }
   })
 
-  const api = new lcapi.Api(dao)
+  const api = new Api(dao)
   api.setup({
     ssr: true,
+    cache: true,
     createReactiveObject(definition) {
       //console.log("CREATE REACTIVE OBJECT", definition)
       return createReactiveObject(definition, reactiveMixin(api), reactivePrefetchMixin(api) )
