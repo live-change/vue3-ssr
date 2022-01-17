@@ -1,15 +1,7 @@
 import { DaoProxy, DaoPrerenderCache, DaoCache, Path } from "@live-change/dao"
 import validators from '@live-change/framework/lib/utils/validators.js'
-import { hashCode, encodeNumber, uidGenerator } from '@live-change/uid'
+import { hashCode, encodeNumber, uidGenerator, randomString } from '@live-change/uid'
 import { ref, computed, watch } from "vue"
-
-function guid() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
-  }
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4()
-}
 
 class Api extends DaoProxy {
   constructor(source, settings = {}) {
@@ -37,10 +29,6 @@ class Api extends DaoProxy {
     this.createReactiveObject = this.settings.createReactiveObject
     this.setupCaches()
     this.setupMetadata()
-  }
-
-  guid() {
-    return guid()
   }
 
   setupCaches() {
@@ -113,11 +101,14 @@ class Api extends DaoProxy {
         apiInfo = this.prerenderCache.cache.get(cachePath)
       }
     }
+    console.trace("GENERATE API SERVICES!")
     console.log("GENERATE SERVICES API", apiInfo)
     const definitions = apiInfo?.services
     if(JSON.stringify(definitions) == JSON.stringify(api.servicesApiDefinitions)) return
     if(!definitions) throw new Error("API DEFINITIONS NOT FOUND! UNABLE TO GENERATE API!")
-    api.uidGenerator = uidGenerator(apiInfo.client.user || apiInfo.client.session.slice(0, 16), 1)
+    api.uidGenerator = uidGenerator(
+      apiInfo.client.user || (apiInfo.client.session ? apiInfo.client.session.slice(0, 16) : randomString(10) )
+      , 1, '[]')
     //console.log("GENERATE API DEFINITIONS", definitions)
     api.servicesApiDefinitions = definitions
     let globalViews = {}
@@ -227,7 +218,7 @@ class Api extends DaoProxy {
   }
 
   command(method, args = {}) {
-    const _commandId = args._commandId || guid()
+    const _commandId = args._commandId || this.uidGenerator()
     console.trace("COMMAND "+_commandId+":"+JSON.stringify(method))
     return this.request(method, { ...args, _commandId })
   }
