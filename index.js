@@ -1,37 +1,31 @@
 import { getCurrentInstance, onUnmounted } from 'vue'
 import { live as d3live, RangeBuckets } from '@live-change/dao-vue3'
 
-function path(app) {
-  app = app || getCurrentInstance()
-  return app.appContext.config.globalProperties.$lc.fetch
+function api(context) {
+  context = context || getCurrentInstance().appContext
+  return context.config.globalProperties.$lc
 }
 
-function api(app) {
-  app = app || getCurrentInstance()
-  return app.appContext.config.globalProperties.$lc
+function path(context) {
+  return api(context).fetch
 }
 
-function view(app) {
-  app = app || getCurrentInstance()
-  return app.appContext.config.globalProperties.$lc.view
+function view(context) {
+  return api(context).view
 }
 
-function actions(app) {
-  app = app || getCurrentInstance()
-  return app.appContext.config.globalProperties.$lc.actions
+function actions(context) {
+  return api(context).actions
 }
 
 function live(path) {
-  const app = getCurrentInstance()
-  const api = app.appContext.config.globalProperties.$lc
-  return d3live(api, path)
+  return d3live(api(), path)
 }
 
-async function rangeBuckets(pathFunction, options, app) {
-  app = app || getCurrentInstance()
-  const api = app.appContext.config.globalProperties.$lc
-  const extendedPathFunction = (range) => pathFunction(range, api.fetch)
-  const buckets = new RangeBuckets(api, extendedPathFunction, options)
+async function rangeBuckets(pathFunction, options, app = getCurrentInstance()) {
+  const lc = api()
+  const extendedPathFunction = (range) => pathFunction(range, lc.fetch)
+  const buckets = new RangeBuckets(lc, extendedPathFunction, options)
   if(app) {
     onUnmounted(() => {
       buckets.dispose()
@@ -62,14 +56,12 @@ function reverseRange(range) {
   }
 }
 
-function client(app) {
-  app = app || getCurrentInstance()
-  return app.appContext.config.globalProperties.$lc.client
+function client(context) {
+  return api(context).client
 }
 
-function uid(app) {
-  app = app || getCurrentInstance()
-  return app.appContext.config.globalProperties.$lc.uid
+function uid(context) {
+  return api(context).uid
 }
 
 export { path, api, view, actions, live, client, uid, rangeBuckets, reverseRange }
